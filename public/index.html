@@ -3,9 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Api Documentation</title>
+    <title>Task Management API Documentation</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css" rel="stylesheet" />
+    <link href="index.css" rel="stylesheet" />
 </head>
 <body>
-    <h1>Api Documentation</h1>
+    <div class="container">
+        <h1>Task Management API Documentation</h1>
+
+        <section>
+            <h2>Overview</h2>
+            <p>This API provides functionality for managing users, lists, and tasks in a task management system. It's built using Flask and SQLAlchemy with JWT authentication.</p>
+        </section>
+
+        <section>
+            <h2>Authentication</h2>
+
+            <div class="endpoint">
+                <h3><span class="method post">POST</span> /api/register</h3>
+                <h4>Request Body:</h4>
+                <pre><code>{
+    "email": "user@example.com",
+    "password": "userpassword"
+}</code></pre>
+                <h4>Response:</h4>
+                <pre><code>{
+    "user": {
+        "id": 1,
+        "email": "user@example.com"
+    },
+    "auth": "jwt_token"
+}</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="method post">POST</span> /api/login</h3>
+                <h4>Request Body:</h4>
+                <pre><code>{
+    "email": "user@example.com",
+    "password": "userpassword"
+}</code></pre>
+                <h4>Response:</h4>
+                <pre><code>{
+    "user": {
+        "id": 1,
+        "email": "user@example.com"
+    },
+    "auth": "jwt_token"
+}</code></pre>
+            </div>
+        </section>
+
+        <section>
+            <h2>Lists Management</h2>
+
+            <div class="endpoint">
+                <h3><span class="method post">POST</span> /api/list</h3>
+                <p><strong>Authentication Required</strong></p>
+                <h4>Request Body:</h4>
+                <pre><code>{
+    "title": "My New List"
+}</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="method get">GET</span> /api/list</h3>
+                <p><strong>Authentication Required</strong></p>
+                <p>Returns array of user's lists with their tasks</p>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="method delete">DELETE</span> /api/list/delete</h3>
+                <p><strong>Authentication Required</strong></p>
+                <h4>Request Body:</h4>
+                <pre><code>{
+    "id": 1
+}</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="method put">PUT</span> /api/list/change</h3>
+                <p><strong>Authentication Required</strong></p>
+                <h4>Request Body:</h4>
+                <pre><code>{
+    "list_id": 1,
+    "title": "Updated Title"
+}</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="method put">PUT</span> /api/list/reorder</h3>
+                <p><strong>Authentication Required</strong></p>
+                <h4>Request Body:</h4>
+                <pre><code>{
+    "new_order": [3, 1, 2]
+}</code></pre>
+            </div>
+        </section>
+
+        <section>
+            <h2>Tasks Management</h2>
+
+            <div class="endpoint">
+                <h3><span class="method post">POST</span> /api/task</h3>
+                <p><strong>Authentication Required</strong></p>
+                <h4>Request Body:</h4>
+                <pre><code>{
+    "text": "New task description",
+    "list_id": 1
+}</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="method delete">DELETE</span> /api/task/delete</h3>
+                <p><strong>Authentication Required</strong></p>
+                <h4>Request Body:</h4>
+                <pre><code>{
+    "id": 1,
+    "listId": 1
+}</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="method put">PUT</span> /api/task/change</h3>
+                <p><strong>Authentication Required</strong></p>
+                <h4>Request Body:</h4>
+                <pre><code>{
+    "taskId": 1,
+    "listId": 1,
+    "newTitle": "Updated task text"
+}</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="method put">PUT</span> /api/tasks/reorder</h3>
+                <p><strong>Authentication Required</strong></p>
+                <h4>Request Body:</h4>
+                <pre><code>{
+    "list_id": 1,
+    "ordered_task_ids": [3, 1, 2]
+}</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <h3><span class="method put">PUT</span> /api/task/move</h3>
+                <p><strong>Authentication Required</strong></p>
+                <h4>Request Body:</h4>
+                <pre><code>{
+    "fromListId": 1,
+    "toListId": 2,
+    "updatedFromTasks": [
+        {"id": 1, "position": 0},
+        {"id": 2, "position": 1}
+    ],
+    "updatedToTasks": [
+        {"id": 3, "position": 0},
+        {"id": 4, "position": 1}
+    ]
+}</code></pre>
+            </div>
+        </section>
+
+        <section>
+            <h2>Error Handling</h2>
+            <div class="error-codes">
+                <strong>200:</strong> <span>Success</span>
+                <strong>201:</strong> <span>Successfully created</span>
+                <strong>400:</strong> <span>Bad request (missing or invalid parameters)</span>
+                <strong>404:</strong> <span>Resource not found</span>
+                <strong>500:</strong> <span>Server error</span>
+            </div>
+            <p>All error responses include an error message in the following format:</p>
+            <pre><code>{
+    "error": "Error description"
+}</code></pre>
+        </section>
+
+        <section>
+            <h2>Authentication Note</h2>
+            <div class="auth-note">
+                <p>The API uses JWT (JSON Web Tokens) for authentication. After logging in or registering, include the JWT token in the Authorization header for protected endpoints:</p>
+                <pre><code>Authorization: Bearer &lt;jwt_token&gt;</code></pre>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-json.min.js"></script>
 </body>
 </html>
