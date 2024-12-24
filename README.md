@@ -27,7 +27,7 @@ A RESTful API built with Flask and SQLAlchemy that provides task management func
 1. Clone the repository:
 ```bash
 git clone [repository-url]
-cd task-management-api
+cd TaskFlow-api
 ```
 
 2. Install Pipenv if you haven't already:
